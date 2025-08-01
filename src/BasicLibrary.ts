@@ -26,8 +26,8 @@ export class ISkill {
   constructor(
     public owner: Player | null = null,
     public name: string,
-    public CD: number = 1,
-    public startsAt: number = CD,
+    public CD: number | string = 1,
+    public startsAt: number = (typeof CD == 'string' ? 0 : CD),
   ) {
     this.owner = owner;
     this.name = name;
@@ -35,10 +35,34 @@ export class ISkill {
     this.startsAt = startsAt;
   }
   CDTry(round: RoundInfo) {
-    return round.roundId >= this.startsAt;
+    if (typeof this.CD == 'string') {
+      var CDGroup = { name: '', CD: 1, startsAt: 1 };
+      if (this.owner) {
+        var tmpCDGroup = this.owner.role.CDGroup.find((item) => {
+          return item.name == this.CD;}
+        )
+        if (tmpCDGroup) {
+          CDGroup = tmpCDGroup;
+        }
+      }
+      return round.roundId >= CDGroup.startsAt && round.roundId >= this.startsAt;
+    }
+    else return round.roundId >= this.startsAt;
   }
   CDRefresh(round: RoundInfo) {
-    this.startsAt = round.roundId + this.CD;
+    this.startsAt = round.roundId + (typeof this.CD == 'string' ? 0 : this.CD);
+    if (typeof this.CD == 'string') {
+      var CDGroup = { name: '', CD: 1, startsAt: 1 };
+      if (this.owner) {
+        var tmpCDGroup = this.owner.role.CDGroup.find((item) => {
+          return item.name == this.CD;}
+        )
+        if (tmpCDGroup) {
+          CDGroup = tmpCDGroup;
+        }
+      }
+      CDGroup.startsAt = round.roundId + CDGroup.CD;
+    }
   }
   execute(round: RoundInfo) {
     // Default implementation does nothing
@@ -60,4 +84,5 @@ export class IRole {
     this.name = name;
     this.skills = skills;
   }
+  CDGroup: { name: string, CD: number, startsAt: number }[] = []
 }

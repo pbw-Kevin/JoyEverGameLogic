@@ -90,7 +90,7 @@ export class Radar extends BasicLibrary.ISkill {
   constructor(
     public owner: BasicLibrary.Player | null = null,
   ) {
-    super(owner, 'Radar', 3);
+    super(owner, 'Radar', 'Radar', 3);
   }
   skillType = ['Defense' as const];
 }
@@ -104,10 +104,55 @@ export class Exchange extends BasicLibrary.ISkill {
   skillType = ['Defense' as const]; 
 }
 
+export class MultipleRadarGun extends BasicLibrary.ISkill {
+  constructor(
+    public owner: BasicLibrary.Player | null = null,
+  ) {
+    super(owner, 'Multiple Radar Gun', 'Radar', 3);
+  }
+  skillType = ['Attack' as const];
+  attackType = 'Physical' as const;
+}
+
+export class ABomb extends BasicLibrary.ISkill {
+  constructor(
+    public owner: BasicLibrary.Player | null = null,
+  ) {
+    super(owner, 'A-Bomb');
+  }
+  skillType = ['Attack' as const];
+  attackType = 'Physical' as const;
+}
+
+export class Plane extends BasicLibrary.ISkill {
+  constructor(
+    public owner: BasicLibrary.Player | null = null,
+  ) {
+    super(owner, 'Plane', 2, 2);
+  }
+  skillType = ['Defense' as const];
+}
+
+export class Rocket extends BasicLibrary.ISkill {
+  constructor(
+    public owner: BasicLibrary.Player | null = null,
+  ) {
+    super(owner, 'Rocket', 2, 2);
+  }
+  skillType = ['Defense' as const];
+}
+
 export class CommonPeople extends BasicLibrary.IRole {
   constructor() {
-    super('Common People', [])
+    super('Common People', [
+      new Eric(), new Steal(), new Scissors(), new Shelf(),
+      new DoubleClone(), new SingleGun(), new DoubleGun(),
+      new BilibiliFuckingMan(), new Baishi(), new Radar(),
+      new Exchange(), new MultipleRadarGun(), new ABomb(),
+      new Plane(), new Rocket()
+    ])
+    this.CDGroup.push({ name: 'Radar', CD: 3, startsAt: 3 });
   }
   isCommonPeople: boolean = true;
-  bulletCount: number = 0
+  bulletCount: number = 0;
 }
